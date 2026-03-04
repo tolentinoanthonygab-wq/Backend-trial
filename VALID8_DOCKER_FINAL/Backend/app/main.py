@@ -2,6 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import users, events, programs, departments, auth, attendance 
 from app.services.face_recognition import FaceRecognitionService
+from app.database import engine
+from app.models.base import Base
+
+# Import all models so they are registered with Base.metadata
+from app.models import associations, attendance as attendance_model, department, event, program, role, user
 
 
 app = FastAPI()
@@ -26,6 +31,11 @@ app.include_router(attendance.router)
 # Load face encodings at startup
 face_service = FaceRecognitionService()
 face_service.load_encodings("face_encodings.pkl")
+
+@app.on_event("startup")
+def on_startup():
+    """Create database tables on startup if they don't exist."""
+    Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 async def root():

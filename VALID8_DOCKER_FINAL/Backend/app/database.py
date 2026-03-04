@@ -14,9 +14,12 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@db:5432/fastapi_db")
 
+# Render provides DATABASE_URL with postgres:// prefix, but SQLAlchemy requires postgresql://
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 engine = create_engine(
     DATABASE_URL,
-    echo=True,  # This will show SQL queries in console
     pool_pre_ping=True  # Checks connection before using
 )
 
