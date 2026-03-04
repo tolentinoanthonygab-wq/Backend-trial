@@ -69,6 +69,37 @@ def seed_admin_user(db: Session):
     else:
         print("ℹ️  Admin user already exists")
 
+def seed_sample_users(db: Session):
+    """Seed 5 sample users"""
+    # Assuming 'student' role is the default user role; change if needed
+    user_role = db.query(Role).filter(Role.name == "student").first()
+    
+    if not user_role:
+        print("❌ Student role not found, skipping sample users")
+        return
+
+    for i in range(1, 6):
+        email = f"user{i}@example.com"
+        existing_user = db.query(User).filter(User.email == email).first()
+        
+        if not existing_user:
+            user = User(
+                email=email,
+                first_name=f"User{i}",
+                middle_name="",
+                last_name="Sample",
+                is_active=True
+            )
+            user.set_password("student123")
+            db.add(user)
+            db.flush()
+            
+            ur = UserRole(user_id=user.id, role_id=user_role.id)
+            db.add(ur)
+            
+    db.commit()
+    print("✅ 5 Sample users created (user1 to user5 @example.com)")
+
 def run_seeder():
     """Main seeder function"""
     print("🌱 Starting database seeding...")
@@ -85,6 +116,9 @@ def run_seeder():
         
         # Seed admin user
         seed_admin_user(db)
+        
+        # Seed 5 sample users
+        seed_sample_users(db)
         
         print("🎉 Database seeding completed successfully!")
         
