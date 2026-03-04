@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { NavbarStudent } from "../components/NavbarStudent";
+import GmailButton from "../components/GmailButton";
 
 // Import colorful icons
 import { FaCalendarAlt, FaCheckCircle } from "react-icons/fa";
@@ -83,6 +84,9 @@ export const StudentDashboard: React.FC = () => {
             ))}
           </div>
         </div>
+
+        {/* Gmail Attendance Button */}
+        <GmailButton />
       </main>
 
       <footer

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { NavbarSSG } from "../components/NavbarSSG";
+import GmailButton from "../components/GmailButton";
 
 // Import colorful icons
 import { FaClipboardList, FaUsers, FaChartBar } from "react-icons/fa";
@@ -89,6 +90,9 @@ export const SSGDashboard: React.FC = () => {
             ))}
           </div>
         </div>
+
+        {/* Gmail Attendance Button */}
+        <GmailButton />
       </main>
 
       <footer

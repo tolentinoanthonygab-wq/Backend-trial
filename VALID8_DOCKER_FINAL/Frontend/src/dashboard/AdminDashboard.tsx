@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { NavbarAdmin } from "../components/NavbarAdmin";
+import GmailButton from "../components/GmailButton";
 
 // Import colorful icons
 import {
@@ -100,6 +101,9 @@ export const AdminDashboard: React.FC = () => {
             ))}
           </div>
         </div>
+
+        {/* Gmail Attendance Button */}
+        <GmailButton />
       </main>
 
       <footer
