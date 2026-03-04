@@ -9,8 +9,12 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Replace with your database URL
-DATABASE_URL = "postgresql://postgres:postgres@db:5432/fastapi_db" # Update this to your database URL
+import os
+
+# Use DATABASE_URL from environment; Render provides postgres://, convert to postgresql://
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@db:5432/fastapi_db")
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 def run_migration():
     """
