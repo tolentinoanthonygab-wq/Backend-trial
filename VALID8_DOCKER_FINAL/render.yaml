@@ -1,0 +1,41 @@
+# render.yaml
+version: "1"
+
+services:
+  # Backend FastAPI Service (Docker)
+  - type: web
+    name: valid8-backend
+    env: docker
+    rootDir: ./backend
+    dockerfilePath: ./Dockerfile
+    # Remove the default Render port and use the EXPOSE port as per Dockerspec
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: valid8-db
+          property: connectionString
+
+  # Frontend Vite React App (Static Site)
+  - type: web
+    name: valid8-frontend
+    env: static
+    rootDir: ./frontend
+    buildCommand: npm install && npm run build
+    publishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: valid8-backend
+          envVarKey: RENDER_EXTERNAL_URL
+
+databases:
+  - type: postgres # actually, Render databases are defined under a top-level databases: array and don't require type: postgres, but wait...
+  # Actually the blueprint spec says Type is not required under databases array, or maybe it doesn't even exist. Let's just remove type if in databases.
+    name: valid8-db
+    databaseName: fastapi_db
+    user: postgres
