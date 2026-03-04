@@ -1,4 +1,3 @@
-# render.yaml
 version: "1"
 
 services:
@@ -35,4 +34,5 @@ services:
 databases:
   - name: valid8-db
     databaseName: fastapi_db
-    user: postgres
+    user: valid8user   # ✅ ADD THIS LINE
+    plan: free         # (optional but recommended)
