@@ -35,8 +35,3 @@ services:
 databases:
   - name: valid8-db
     databaseName: fastapi_db
-
-<<<<<<< HEAD
-=======
-
->>>>>>> trial/main
