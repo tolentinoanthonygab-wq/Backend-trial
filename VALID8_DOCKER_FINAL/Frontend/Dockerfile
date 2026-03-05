@@ -1,4 +1,19 @@
-# Use official Node.js image
+# Frontend/Dockerfile – production build and serve with nginx
+# -------------------------------------------------
+# 1️⃣ Build stage
+FROM node:20 AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build   # creates ./dist
+
+# 2️⃣ Serve stage
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+# Expose the port Railway will map (nginx default 80)
+EXPOSE 80
+
 FROM node:20
 
 # Set working directory inside the container

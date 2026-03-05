@@ -1,0 +1,36 @@
+# railway.toml – Railway Blueprint
+# -------------------------------------------------
+# This file tells Railway how to build and run each service.
+# Keep it at the repository root (same level as docker-compose.yml).
+
+[services]
+
+# 1️⃣ PostgreSQL database (Railway will provision the DB for you)
+[[services]]
+type = "postgres"
+name = "valid8-db"
+# The DATABASE_URL env‑var will be injected automatically by Railway.
+# No extra configuration needed.
+
+# 2️⃣ FastAPI backend (Docker)
+[[services]]
+type = "docker"
+name = "valid8-backend"
+dockerfile = "./Backend/Dockerfile"
+# The Dockerfile already uses `CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}`
+# Railway will set the $PORT env‑var at runtime.
+
+# 3️⃣ Frontend static site (Docker)
+[[services]]
+type = "docker"
+name = "valid8-frontend"
+dockerfile = "./Frontend/Dockerfile"
+# The frontend Dockerfile builds the Vite app and serves the static files with nginx.
+# Railway will expose the container on $PORT automatically.
+
+# -------------------------------------------------
+# Optional: expose environment variables that you want to set from the UI.
+# Railway will automatically provide DATABASE_URL for the Postgres service.
+# You can add VITE_API_URL here if you want Railway to inject it at build time.
+[environment]
+VITE_API_URL = "http://valid8-backend:8000"
