@@ -1,35 +1,29 @@
-# Frontend/Dockerfile – production build and serve with nginx
-# -------------------------------------------------
 # 1️⃣ Build stage
 FROM node:20 AS builder
+
 WORKDIR /app
+
 COPY package*.json ./
 RUN npm ci
+
 COPY . .
-RUN npm run build   # creates ./dist
+
+# Pass build args if needed by Vite
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
+RUN npm run build
 
 # 2️⃣ Serve stage
 FROM nginx:alpine
+
+# Copy the build output to replace the default nginx contents
 COPY --from=builder /app/dist /usr/share/nginx/html
-# Expose the port Railway will map (nginx default 80)
-EXPOSE 80
 
-FROM node:20
+# We need a custom nginx configuration to:
+# 1. Listen on the dynamic $PORT provided by Railway
+# 2. Support SPA routing (redirecting all traffic to index.html)
+COPY nginx.conf /etc/nginx/conf.d/default.conf.template
 
-# Set working directory inside the container
-WORKDIR /app
-
-# Copy only dependency files first to leverage Docker caching
-COPY package.json package-lock.json ./
-
-# Install dependencies using npm
-RUN npm install
-
-# Copy the rest of your app code
-COPY . .
-
-# Expose the port used by Vite dev server
-EXPOSE 5173
-
-# Start Vite dev server
-CMD ["npm", "run", "dev"]
+# Use envsubst to replace $PORT in the template with the actual Railway port, then start nginx
+CMD /bin/sh -c "envsubst '\$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
