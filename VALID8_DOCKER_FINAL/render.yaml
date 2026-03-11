@@ -1,37 +1,20 @@
-# render.yaml
-version: "1"
-
 services:
-  # Backend FastAPI Service (Docker)
   - type: web
-    name: valid8-backend
-    runtime: docker
-    rootDir: ./Backend
-    dockerfilePath: ./Dockerfile
+    name: rizal-backend
+    env: docker
+    dockerfilePath: ./Backend/Dockerfile
+    dockerContext: ./Backend
+    region: singapore
+    plan: free
+    healthCheckPath: /
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: valid8-db
+          name: rizal-db
           property: connectionString
 
-  # Frontend Vite React App (Static Site)
-  - type: web
-    name: valid8-frontend
-    runtime: static
-    rootDir: ./Frontend
-    buildCommand: npm install && npm run build
-    staticPublishPath: ./dist
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    envVars:
-      - key: VITE_API_URL
-        fromService:
-          type: web
-          name: valid8-backend
-          envVarKey: RENDER_EXTERNAL_URL
-
 databases:
-  - name: valid8-db
+  - name: rizal-db
     databaseName: fastapi_db
+    region: singapore
+    plan: free
