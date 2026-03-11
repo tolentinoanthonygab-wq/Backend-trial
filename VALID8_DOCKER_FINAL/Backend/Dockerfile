@@ -23,8 +23,5 @@ RUN pip install --default-timeout=100 --no-cache-dir -r requirements.txt
 # Copy all backend source code into the container
 COPY . .
 
-# Expose the port FastAPI will run on
-EXPOSE 8000
-
-# Command to run the FastAPI app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Command to run the FastAPI app, using Railway's PORT env var or defaulting to 8000
+CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
