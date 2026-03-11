@@ -18,8 +18,8 @@ interface User {
   email: string;
 }
 
-interface SSGMember {
-  user_id: number;
+interface SSGProfile {
+  id: number;
   position: string;
   user: User;
 }
@@ -43,7 +43,7 @@ interface Event {
   status: "upcoming" | "ongoing" | "completed" | "cancelled";
   departments?: Department[];
   programs?: Program[];
-  ssg_members?: SSGMember[]; // Use SSGMember instead of SSGProfile
+  ssg_members?: SSGProfile[]; // Use SSGProfile instead of SSGMember
 }
 
 export const Events: React.FC<EventsProps> = ({ role }) => {
@@ -52,20 +52,9 @@ export const Events: React.FC<EventsProps> = ({ role }) => {
     "all" | "upcoming" | "ongoing" | "completed" | "cancelled"
   >("all");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkIfMobile();
-    window.addEventListener("resize", checkIfMobile);
-    return () => window.removeEventListener("resize", checkIfMobile);
-  }, []);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -109,11 +98,11 @@ export const Events: React.FC<EventsProps> = ({ role }) => {
   };
 
   // Then update formatSSGMembers:
-  const formatSSGMembers = (members: SSGMember[] = []) => {
+  const formatSSGMembers = (members: SSGProfile[] = []) => {
     if (!members || members.length === 0) return "N/A";
 
     return members.map((m) => (
-      <div key={m.user_id} className="ssg-member-item">
+      <div key={m.id} className="ssg-member-item">
         <FaUsers className="member-icon" />
         <span>
           {m.user.first_name} {m.user.last_name}
@@ -172,9 +161,8 @@ export const Events: React.FC<EventsProps> = ({ role }) => {
             {dropdownOpen && (
               <div className="filter-dropdown">
                 <button
-                  className={`dropdown-item ${
-                    filter === "all" ? "active" : ""
-                  }`}
+                  className={`dropdown-item ${filter === "all" ? "active" : ""
+                    }`}
                   onClick={() => {
                     setFilter("all");
                     setDropdownOpen(false);
@@ -183,9 +171,8 @@ export const Events: React.FC<EventsProps> = ({ role }) => {
                   All Events
                 </button>
                 <button
-                  className={`dropdown-item ${
-                    filter === "upcoming" ? "active" : ""
-                  }`}
+                  className={`dropdown-item ${filter === "upcoming" ? "active" : ""
+                    }`}
                   onClick={() => {
                     setFilter("upcoming");
                     setDropdownOpen(false);
@@ -194,9 +181,8 @@ export const Events: React.FC<EventsProps> = ({ role }) => {
                   Upcoming
                 </button>
                 <button
-                  className={`dropdown-item ${
-                    filter === "ongoing" ? "active" : ""
-                  }`}
+                  className={`dropdown-item ${filter === "ongoing" ? "active" : ""
+                    }`}
                   onClick={() => {
                     setFilter("ongoing");
                     setDropdownOpen(false);
@@ -205,9 +191,8 @@ export const Events: React.FC<EventsProps> = ({ role }) => {
                   Ongoing
                 </button>
                 <button
-                  className={`dropdown-item ${
-                    filter === "completed" ? "active" : ""
-                  }`}
+                  className={`dropdown-item ${filter === "completed" ? "active" : ""
+                    }`}
                   onClick={() => {
                     setFilter("completed");
                     setDropdownOpen(false);
@@ -216,9 +201,8 @@ export const Events: React.FC<EventsProps> = ({ role }) => {
                   Completed
                 </button>
                 <button
-                  className={`dropdown-item ${
-                    filter === "cancelled" ? "active" : ""
-                  }`}
+                  className={`dropdown-item ${filter === "cancelled" ? "active" : ""
+                    }`}
                   onClick={() => {
                     setFilter("cancelled");
                     setDropdownOpen(false);

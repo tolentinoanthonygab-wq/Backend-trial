@@ -24,6 +24,13 @@ interface Program {
   name: string;
 }
 
+interface User {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+}
+
 interface SSGProfile {
   id: number;
   position: string;
@@ -59,9 +66,9 @@ export const fetchEventsByStatus = async (status: EventStatus): Promise<Event[]>
 export const fetchEventsAttended = async (): Promise<Event[]> => {
   try {
     const response = await fetch(`${BASE_URL}/eventsAttended`);
-    
+
     if (!response.ok) throw new Error('Network error');
-    
+
     return await response.json();
   } catch (error) {
     console.error("Error fetching attended events:", error);

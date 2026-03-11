@@ -3,6 +3,7 @@ import { createContext, useContext, useState } from "react";
 interface UserContextType {
   avatar: string | null;
   setAvatar: (userId: string, avatar: string) => void;
+  getAvatarForUser: (userId: string) => string | null;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -25,6 +26,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         avatar,
         setAvatar,
+        getAvatarForUser,
       }}
     >
       {children}

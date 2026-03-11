@@ -5,7 +5,7 @@ import NavbarStudentSSGEventOrganizer from "../components/NavbarStudentSSGEventO
 import { NavbarSSG } from "../components/NavbarSSG";
 import search_logo from "../assets/images/search_logo.png";
 import "../css/Attendance.css";
-import { FaRegSmileBeam, FaCheckCircle, FaUserAlt } from "react-icons/fa";
+import { FaRegSmileBeam, FaUserAlt } from "react-icons/fa";
 import { FiClock, FiMapPin, FiCalendar, FiUser } from "react-icons/fi";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
@@ -53,11 +53,9 @@ export const Attendance: React.FC<AttendanceProps> = ({ role }) => {
   const [attendanceRecords, setAttendanceRecords] = useState<
     AttendanceRecord[]
   >([]);
-  const [events, setEvents] = useState<Event[]>([]);
   const [scanning, setScanning] = useState<number | null>(null);
   const [scanType, setScanType] = useState<"timeIn" | "timeOut" | null>(null);
   const [showCamera, setShowCamera] = useState(false);
-  const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [resetAfterSubmit, setResetAfterSubmit] = useState(true);
@@ -75,7 +73,6 @@ export const Attendance: React.FC<AttendanceProps> = ({ role }) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      setEvents(data);
 
       // Initialize attendance records for each event
       setAttendanceRecords(
@@ -234,7 +231,6 @@ export const Attendance: React.FC<AttendanceProps> = ({ role }) => {
 
     context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
     const imageData = canvas.toDataURL("image/jpeg");
-    setCapturedImage(imageData);
 
     // Process the scan after capture
     if (scanning !== null && scanType) {
@@ -305,8 +301,7 @@ export const Attendance: React.FC<AttendanceProps> = ({ role }) => {
 
       // Show success message
       alert(
-        `Attendance ${
-          type === "timeIn" ? "time-in" : "time-out"
+        `Attendance ${type === "timeIn" ? "time-in" : "time-out"
         } recorded successfully for ${student.fullName}!`
       );
 
@@ -322,7 +317,6 @@ export const Attendance: React.FC<AttendanceProps> = ({ role }) => {
       setShowCamera(false);
       setScanning(null);
       setScanType(null);
-      setCapturedImage(null);
     }
   };
 
@@ -391,8 +385,7 @@ export const Attendance: React.FC<AttendanceProps> = ({ role }) => {
 
       // Show success message
       alert(
-        `Attendance ${
-          type === "timeIn" ? "time-in" : "time-out"
+        `Attendance ${type === "timeIn" ? "time-in" : "time-out"
         } recorded successfully for ${record.studentDetails.fullName}!`
       );
 
@@ -530,10 +523,9 @@ export const Attendance: React.FC<AttendanceProps> = ({ role }) => {
                   <div
                     className="ams-card-header-image"
                     style={{
-                      backgroundImage: `url(${
-                        event.image ||
+                      backgroundImage: `url(${event.image ||
                         "https://source.unsplash.com/random/600x400/?event"
-                      })`,
+                        })`,
                     }}
                   >
                     <div className="ams-header-overlay">
@@ -611,11 +603,10 @@ export const Attendance: React.FC<AttendanceProps> = ({ role }) => {
                         <h4>Time In</h4>
                         <div className="ams-time-input-group">
                           <button
-                            className={`ams-btn ams-face-scan-btn ${
-                              scanning === index && scanType === "timeIn"
-                                ? "ams-scanning"
-                                : ""
-                            } ${event.timeIn ? "ams-success" : ""}`}
+                            className={`ams-btn ams-face-scan-btn ${scanning === index && scanType === "timeIn"
+                              ? "ams-scanning"
+                              : ""
+                              } ${event.timeIn ? "ams-success" : ""}`}
                             onClick={() => startFaceScan(index, "timeIn")}
                             disabled={
                               !!event.timeIn ||
@@ -627,8 +618,8 @@ export const Attendance: React.FC<AttendanceProps> = ({ role }) => {
                             {event.timeIn
                               ? "Recorded"
                               : scanning === index && scanType === "timeIn"
-                              ? "Scanning..."
-                              : "Face Scan"}
+                                ? "Scanning..."
+                                : "Face Scan"}
                           </button>
                           <div className="ams-time-display">
                             {event.timeIn ? (
@@ -650,11 +641,10 @@ export const Attendance: React.FC<AttendanceProps> = ({ role }) => {
                         <h4>Time Out</h4>
                         <div className="ams-time-input-group">
                           <button
-                            className={`ams-btn ams-face-scan-btn ${
-                              scanning === index && scanType === "timeOut"
-                                ? "ams-scanning"
-                                : ""
-                            } ${event.timeOut ? "ams-success" : ""}`}
+                            className={`ams-btn ams-face-scan-btn ${scanning === index && scanType === "timeOut"
+                              ? "ams-scanning"
+                              : ""
+                              } ${event.timeOut ? "ams-success" : ""}`}
                             onClick={() => startFaceScan(index, "timeOut")}
                             disabled={
                               !event.timeIn ||
@@ -666,8 +656,8 @@ export const Attendance: React.FC<AttendanceProps> = ({ role }) => {
                             {event.timeOut
                               ? "Recorded"
                               : scanning === index && scanType === "timeOut"
-                              ? "Scanning..."
-                              : "Face Scan"}
+                                ? "Scanning..."
+                                : "Face Scan"}
                           </button>
                           <div className="ams-time-display">
                             {event.timeOut ? (

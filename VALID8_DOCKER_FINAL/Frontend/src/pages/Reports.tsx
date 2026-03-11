@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { NavbarAdmin } from "../components/NavbarAdmin";
 import search_logo from "../assets/images/search_logo.png";
 import { FaDownload } from "react-icons/fa";
@@ -50,7 +50,7 @@ export const Reports: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [attendanceReport, setAttendanceReport] =
     useState<AttendanceReport | null>(null);
-  const [selectedProgram, setSelectedProgram] = useState<number | "all">("all");
+  const [selectedProgram, setSelectedProgram] = useState<string | "all">("all");
   const [isLoading, setIsLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -118,9 +118,8 @@ export const Reports: React.FC = () => {
 
     csvContent += `Program Breakdown:\r\n`;
     attendanceReport.program_breakdown.forEach((program) => {
-      csvContent += `${program.program},${program.total},${program.present},${
-        program.absent
-      },${Math.round((program.present / program.total) * 100)}%\r\n`;
+      csvContent += `${program.program},${program.total},${program.present},${program.absent
+        },${Math.round((program.present / program.total) * 100)}%\r\n`;
     });
 
     const encodedUri = encodeURI(csvContent);
@@ -394,9 +393,6 @@ export const Reports: React.FC = () => {
                   key={event.id}
                   style={{
                     borderBottom: "1px solid #eee",
-                    "&:hover": {
-                      backgroundColor: "#f5f5f5",
-                    },
                   }}
                 >
                   <td style={{ padding: "12px 15px" }}>{event.name}</td>
@@ -487,6 +483,13 @@ export const Reports: React.FC = () => {
           </table>
         </div>
 
+        {/* Loading Indicator */}
+        {isLoading && (
+          <div style={{ textAlign: "center", padding: "20px" }}>
+            <p>Loading...</p>
+          </div>
+        )}
+
         {/* Report Modal */}
         {selectedEvent && attendanceReport && (
           <Modal
@@ -562,7 +565,7 @@ export const Reports: React.FC = () => {
                 value={selectedProgram}
                 onChange={(e) =>
                   setSelectedProgram(
-                    e.target.value === "all" ? "all" : Number(e.target.value)
+                    e.target.value === "all" ? "all" : String(e.target.value)
                   )
                 }
                 style={{
@@ -631,8 +634,8 @@ export const Reports: React.FC = () => {
                     {selectedProgram === "all"
                       ? attendanceReport.total_participants
                       : attendanceReport.program_breakdown.find(
-                          (p) => p.program === selectedProgram
-                        )?.total || 0}
+                        (p) => p.program === selectedProgram.toString()
+                      )?.total || 0}
                   </span>
                 </div>
                 <div
@@ -663,8 +666,8 @@ export const Reports: React.FC = () => {
                     {selectedProgram === "all"
                       ? attendanceReport.attendees
                       : attendanceReport.program_breakdown.find(
-                          (p) => p.program === selectedProgram
-                        )?.present || 0}
+                        (p) => p.program === selectedProgram.toString()
+                      )?.present || 0}
                   </span>
                 </div>
                 <div
@@ -695,8 +698,8 @@ export const Reports: React.FC = () => {
                     {selectedProgram === "all"
                       ? attendanceReport.absentees
                       : attendanceReport.program_breakdown.find(
-                          (p) => p.program === selectedProgram
-                        )?.absent || 0}
+                        (p) => p.program === selectedProgram.toString()
+                      )?.absent || 0}
                   </span>
                 </div>
                 <div
@@ -727,16 +730,16 @@ export const Reports: React.FC = () => {
                     {selectedProgram === "all"
                       ? `${attendanceReport.attendance_rate}%`
                       : (() => {
-                          const program =
-                            attendanceReport.program_breakdown.find(
-                              (p) => p.program === selectedProgram
-                            );
-                          return program
-                            ? `${Math.round(
-                                (program.present / program.total) * 100
-                              )}%`
-                            : "0%";
-                        })()}
+                        const program =
+                          attendanceReport.program_breakdown.find(
+                            (p) => p.program === selectedProgram.toString()
+                          );
+                        return program
+                          ? `${Math.round(
+                            (program.present / program.total) * 100
+                          )}%`
+                          : "0%";
+                      })()}
                   </span>
                 </div>
               </div>
