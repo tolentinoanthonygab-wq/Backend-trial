@@ -33,4 +33,4 @@ dockerfile = "./Frontend/Dockerfile"
 # Railway will automatically provide DATABASE_URL for the Postgres service.
 # You can add VITE_API_URL here if you want Railway to inject it at build time.
 [environment]
-VITE_API_URL = "http://valid8-backend:8000"
+VITE_API_URL = "https://backend-trial-production.up.railway.app"
